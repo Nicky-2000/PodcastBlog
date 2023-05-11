@@ -20,3 +20,21 @@ const options = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 };
+
+
+// callBacks: {
+//   async signIn({ user }) {
+//     let isAllowedToSignIn = true
+//     const allowedUser = [
+//       'YOURGITHUBACCID',
+//     ];
+//     console.log(user);
+//     if (allowedUser.includes(String(user.id))) {
+//       isAllowedToSignIn = true
+//     }
+//     else {
+//       isAllowedToSignIn = false
+//     }
+//     return isAllowedToSignIn
+//   }
+// },
