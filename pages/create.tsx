@@ -1,16 +1,52 @@
 // pages/create.tsx
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import Router from 'next/router';
 import { useSession } from 'next-auth/react';
-
-
+import { Button, Input, Text} from "@chakra-ui/react";
+import SpotifySearch from '../components/SpotifySearch';
 
 const Draft: React.FC = () => {
-    const { data: session } = useSession();
-    const [title, setTitle] = useState('');
+  const [spotifyToken, setSpotifyToken] = useState("");
+
+  const { data: session } = useSession();
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  useEffect(() => {
+    const fetchAndSetToken = async () => {
+      let access_token
+      let tokenFetchedTime
+      // Get the value from local storage if it exists
+      access_token = window.localStorage.getItem("spotifyToken") || ""
+      console.log("ACCESS_TOKEN FROM WINDOW: " + access_token)
+      tokenFetchedTime = window.localStorage.getItem("spotifyTokenFetchedTime") || ""
+      if (!access_token || !tokenFetchedTime || (new Date().getTime() - tokenFetchedTime)/1000 > 3000) {
+        access_token = await getToken();
+        if (access_token) {
+          window.localStorage.setItem("spotifyToken", access_token)
+          tokenFetchedTime = new Date().getTime()
+          window.localStorage.setItem("spotifyTokenFetchedTime", tokenFetchedTime)
+        }
+      }
+      setSpotifyToken(access_token)
+    }
+
+    fetchAndSetToken().catch((error) => {console.error(error)})
+  }, [])
+
+  const getToken = async () => {
+    try {
+      const response = await fetch('/api/spotify/getToken', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const responseJson = await response.json()
+      return responseJson.token
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const submitData = async (e: React.SyntheticEvent) => {
     const email = session.user.email
@@ -52,7 +88,16 @@ const Draft: React.FC = () => {
           <a className="back" href="#" onClick={() => Router.push('/')}>
             or Cancel
           </a>
+          <Button onClick={getToken}>
+            Get Token
+          </Button>
         </form>
+        <Text>
+            TOKEN: {spotifyToken}
+          </Text>
+          {spotifyToken && <SpotifySearch accessToken={spotifyToken} type="show"/>}
+          {/* {spotifyToken && <SpotifySearch accessToken={spotifyToken} type="episode"/>} */}
+
       </div>
       <style jsx>{`
         .page {

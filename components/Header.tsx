@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from "next-auth/react"
 
+import { Button, ButtonGroup } from '@chakra-ui/react'
+
+
 const Header: React.FC = () => {
   const router = useRouter();
   const isActive: (pathname: string) => boolean = (pathname) =>
@@ -152,13 +155,13 @@ const Header: React.FC = () => {
           {session.user.name} ({session.user.email})
         </p>
         <Link href="/create">
-          <button>
+          <Button>
             <a>New post</a>
-          </button>
+          </Button>
         </Link>
-        <button onClick={() => signOut()}>
+        <Button onClick={() => signOut()}>
           <a>Log out</a>
-        </button>
+        </Button>
         <style jsx>{`
           a {
             text-decoration: none;

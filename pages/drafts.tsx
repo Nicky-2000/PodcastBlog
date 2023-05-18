@@ -7,6 +7,8 @@ import Layout from '../components/Layout';
 import Post, { PostProps } from '../components/Post';
 import prisma from '../lib/prisma';
 
+import { Text, Box } from '@chakra-ui/react'
+
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req });
   console.log(session)
@@ -43,7 +45,7 @@ const Drafts: React.FC<Props> = (props) => {
   if (!session) {
     return (
       <Layout>
-        <h1>My Drafts</h1>
+        <Text>My Drafts</Text>
         <div>You need to be authenticated to view this page.</div>
       </Layout>
     );
@@ -52,14 +54,14 @@ const Drafts: React.FC<Props> = (props) => {
   return (
     <Layout>
       <div className="page">
-        <h1>My Drafts</h1>
-        <main>
+        <Text>My Drafts</Text>
+        <Box>
           {props.drafts.map((post) => (
             <div key={post.id} className="post">
               <Post post={post} />
             </div>
           ))}
-        </main>
+        </Box>
       </div>
       <style jsx>{`
         .post {

@@ -9,6 +9,9 @@ import { PostProps } from '../../components/Post';
 import { useSession } from 'next-auth/react';
 import prisma from '../../lib/prisma';
 
+import { Button, ButtonGroup } from '@chakra-ui/react'
+
+
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
     where: {
@@ -58,10 +61,10 @@ const Post: React.FC<PostProps> = (props) => {
         <p>By {props?.author?.name || 'Unknown author'}</p>
         <ReactMarkdown children={props.content} />
         {!props.published && userHasValidSession && postBelongsToUser && (
-          <button onClick={() => publishPost(props.id)}>Publish</button>
+          <Button onClick={() => publishPost(props.id)}>Publish</Button>
         )}
         {userHasValidSession && postBelongsToUser && (
-          <button onClick={() => deletePost(props.id)}>Delete</button>
+          <Button onClick={() => deletePost(props.id)}>Delete</Button>
         )}
       </div>
       <style jsx>{`
