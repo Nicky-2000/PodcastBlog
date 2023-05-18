@@ -10,7 +10,7 @@ import querystring from 'query-string';
 const token = null;
 
 export default async function handle(req, res) {
-    const { access_token, rawQuery, type } = req.body;
+    const { accessToken, rawQuery, type } = req.body;
     const query = querystring.stringify({
         q: rawQuery
     })
@@ -21,18 +21,20 @@ export default async function handle(req, res) {
         url: 'https://api.spotify.com/v1/search',
         params: {
           q: rawQuery,
-          type: type
+          type: type,
+          market: 'CA',
+          limit: 10,
         },
         headers: {
-          Authorization: `Bearer ${access_token}`
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
         }
       };
       try {
         const response = await axios(options)
         console.log(response)
         console.log("HERE???")
-        // res.status(200).json({ response });
-        res.status(200).json(null)
+        res.status(200).json({data: response.data});
       } catch (error) {
         console.error(error)
         console.log("here")
