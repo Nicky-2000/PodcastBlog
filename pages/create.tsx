@@ -92,6 +92,7 @@ const Draft: React.FC = () => {
             Get Token
           </Button>
         </form>
+        
         <Text>
             TOKEN: {spotifyToken}
           </Text>
